@@ -32,6 +32,7 @@ Live power updates every 5 seconds or more, as set in the device settings (the s
 - **Battery (Modbus):** all batteries of an inverter together: charge and discharge power, state of charge, state of health and energy counters. You can control charging and discharging and set the backup reserve, if your inverter has storage control over Modbus:
   - SolarEdge enables battery data over Modbus per inverter. Without it, the battery device cannot be added, or it has no controls. Ask your installer or SolarEdge support to enable it.
   - Charging and discharging from Homey also needs advanced power control in the inverter, and export limitation must be off. Ask your installer to set this up.
+  - Some inverters accept remote control anyway. If yours demonstrably does, you can turn on "Allow remote control despite inverter settings" in the battery device's settings. The device then shows a warning while Homey runs the battery so. The app never changes the inverter's power control or export settings.
 - **EV Charger (Modbus):** the SolarEdge Home EV Charger. You can start and stop charging, set the charging power and set an energy limit for a session.
 
 Modbus TCP must be enabled on the inverter (your installer can do this in SetApp). Use only one Modbus client at a time on the same inverter.

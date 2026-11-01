@@ -84,6 +84,7 @@ const serve = (holding) => new Promise((resolve) => {
         const address = frame.readUInt16BE(8);
         const words = fc === 0x06 ? [frame.readUInt16BE(10)]
           : Array.from({ length: frame.readUInt16BE(10) }, (_, i) => frame.readUInt16BE(13 + i * 2));
+        regs.writes?.push(...words.map((_, i) => address + i)); // every address written, when a test asks
         if (!regs.rejectWrites) {
           words.forEach((word, i) => {
             regs[address + i] = word;
@@ -153,6 +154,20 @@ const floatAt = (holding, address) => Math.round(wordsFloat(holding[address], ho
 /** Advanced power control on (Power Control Open Protocol p. 16), which the dumps do not show. */
 const advancedPowerControl = (holding) => {
   [holding[0xf104], holding[0xf105], holding[0xf142], holding[0xf143]] = [4, 0, 1, 0]; // eslint-disable-line no-param-reassign
+};
+
+// remote control writes only its own registers (0xE004-0xE011), never a power control or export
+// setting (0xE000-0xE003, 0xF104, 0xF142), also with the override on
+const REMOTE_WRITES = [0xe004, 0xe00a, 0xe00b, 0xe00c, 0xe00d, 0xe00e, 0xe00f, 0xe010, 0xe011];
+const OVERRIDE_LOG = 'override on';
+
+/** Turn the remote control override on or off as the settings page does; what it answers. */
+const setOverride = async (device, on) => {
+  const message = await device.onSettings({
+    newSettings: { ...device.getSettings(), remoteControlOverride: on }, changedKeys: ['remoteControlOverride'],
+  });
+  await device.setSettings({ remoteControlOverride: on });
+  return message;
 };
 
 const load = (dump) => Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(path.join(FIXTURES, `${dump}.json`), 'utf8')).holding)
@@ -334,6 +349,91 @@ const CASES = [
         const refused = await act(device, { target_power: 1000 });
         check(refused?.message === device.homey.__('errors.advancedPowerControlOff'), `${name}: ${refused?.message}`);
         check(holding[0xe004] === 2, `${name}: storage mode ${holding[0xe004]} after a refusal`);
+
+        // the override off: every mode Homey runs is refused, nothing written
+        holding.writes = []; // eslint-disable-line no-param-reassign
+        for (const mode of ['homey', 'force_charge', 'force_discharge', 'pv_charge_only']) {
+          const refusal = await act(device, { target_power_mode: mode }); // eslint-disable-line no-await-in-loop
+          check(refusal?.message === device.homey.__('errors.advancedPowerControlOff'), `${name}: ${mode} without the override: ${refusal?.message}`);
+        }
+        check(!holding.writes.length && device.warning === undefined, `${name}: refused, yet wrote ${holding.writes} (warning ${device.warning})`);
+
+        // on: each mode runs, with a warning and a log line per change of mode
+        const logged = [];
+        device.log = (...args) => logged.push(args.join(' ')); // eslint-disable-line no-param-reassign
+        check(await setOverride(device, true) === undefined, `${name}: turning the override on answered`);
+        check(await act(device, { target_power: 1000 }) === null, `${name}: charging refused with the override on`);
+        check(holding[0xe004] === 4 && holding[0xe00d] === 3 && floatAt(holding, 0xe00e) === 1000,
+          `${name}: override charge command ${[0xe004, 0xe00d].map((a) => holding[a])} ${floatAt(holding, 0xe00e)}`);
+        check(device.warning === device.homey.__('warnings.remoteControlOverride'), `${name}: warning ${device.warning}`);
+        await act(device, { target_power: 1500 });
+        const commands = { force_charge: 3, force_discharge: 4, pv_charge_only: 1 };
+        for (const [mode, command] of Object.entries(commands)) {
+          check(await act(device, { target_power_mode: mode }) === null, `${name}: ${mode} refused with the override on`); // eslint-disable-line no-await-in-loop
+          check(holding[0xe00d] === command, `${name}: ${mode} command ${holding[0xe00d]}`);
+        }
+        const overrides = logged.filter((line) => line.includes(OVERRIDE_LOG));
+        check(overrides.length === 4 && overrides[0].includes('advanced power control is off'), `${name}: override log ${overrides.join(' | ')}`);
+
+        // turned off while a mode runs: back to the fallback command at once, the refusal shown
+        holding[0xe00d] = 3; // eslint-disable-line no-param-reassign
+        const message = await setOverride(device, false);
+        check(message === device.homey.__('errors.advancedPowerControlOff'), `${name}: override off answered ${message}`);
+        check(holding[0xe00d] === 1 && device.getCapabilityValue('target_power_mode') === null && device.warning === null,
+          `${name}: override off left command ${holding[0xe00d]}, mode ${device.getCapabilityValue('target_power_mode')}, warning ${device.warning}`);
+        holding[0xe00d] = 0; // eslint-disable-line no-param-reassign
+        await device.keepAlive();
+        check(holding[0xe00d] === 0, `${name}: keep-alive took control back after the override went off`);
+        const again = await act(device, { target_power: 1000 });
+        check(again?.message === device.homey.__('errors.advancedPowerControlOff'), `${name}: after the override: ${again?.message}`);
+
+        // the inverter's own modes: no pre-check, override or not
+        for (const on of [false, true]) {
+          await setOverride(device, on); // eslint-disable-line no-await-in-loop
+          for (const [mode, code] of [['self_use', 1], ['time_of_use', 2], ['backup', 3]]) {
+            check(await act(device, { target_power_mode: mode }) === null && holding[0xe004] === code, `${name}: ${mode}, override ${on}: ${holding[0xe004]}`); // eslint-disable-line no-await-in-loop
+          }
+        }
+        check(logged.filter((line) => line.includes(OVERRIDE_LOG)).length === 4, `${name}: the inverter's own modes logged as overridden`);
+        await setOverride(device, false);
+        const foreign = holding.writes.filter((address) => !REMOTE_WRITES.includes(address));
+        check(!foreign.length, `${name}: wrote outside remote control: ${foreign.map((a) => a.toString(16))}`);
+        delete holding.writes; // eslint-disable-line no-param-reassign
+      },
+    },
+  },
+  {
+    // advanced power control on, export limitation on (500 W site limit): the override lets it run
+    dump: 'issue913_u1',
+    inject: (holding) => {
+      advancedPowerControl(holding);
+      holding[0xe000] = 1; // eslint-disable-line no-param-reassign
+      setFloat(holding, 0xe002, 500);
+    },
+    battery_modbus: [{ target_power_mode: 'self_use' }],
+    scenario: {
+      battery_modbus: async ({ device, holding, name }) => {
+        holding.writes = []; // eslint-disable-line no-param-reassign
+        const refused = await act(device, { target_power: -1000 });
+        check(refused?.message === device.homey.__('errors.exportLimitActive'), `${name}: without the override: ${refused?.message}`);
+        const logged = [];
+        device.log = (...args) => logged.push(args.join(' ')); // eslint-disable-line no-param-reassign
+        await setOverride(device, true);
+        check(await act(device, { target_power: -1000 }) === null, `${name}: discharging refused with the override on`);
+        check(holding[0xe004] === 4 && holding[0xe00d] === 4 && floatAt(holding, 0xe010) === 1000,
+          `${name}: override discharge command ${[0xe004, 0xe00d].map((a) => holding[a])} ${floatAt(holding, 0xe010)}`);
+        check(device.warning === device.homey.__('warnings.remoteControlOverride'), `${name}: warning ${device.warning}`);
+        check(logged.some((line) => line.includes(OVERRIDE_LOG) && line.includes('export limitation is on')), `${name}: log ${logged.join(' | ')}`);
+        // both checks pass (the installer turned export limitation off): the normal path, no warning
+        holding[0xe000] = 0; // eslint-disable-line no-param-reassign
+        check(await act(device, { target_power: 800 }) === null && holding[0xe00d] === 3, `${name}: with both checks passing ${holding[0xe00d]}`);
+        check(device.warning === null, `${name}: warning kept with both checks passing: ${device.warning}`);
+        // turned off with both checks passing: nothing to stop
+        check(await setOverride(device, false) === undefined && holding[0xe00d] === 3, `${name}: override off stopped a permitted mode`);
+        const foreign = holding.writes.filter((address) => !REMOTE_WRITES.includes(address));
+        check(!foreign.length, `${name}: wrote outside remote control: ${foreign.map((a) => a.toString(16))}`);
+        await act(device, { target_power_mode: 'self_use' });
+        delete holding.writes; // eslint-disable-line no-param-reassign
       },
     },
   },

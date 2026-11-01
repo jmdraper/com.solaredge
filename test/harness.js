@@ -210,6 +210,10 @@ class Device extends SimpleClass {
     this.warning = message;
   }
 
+  async unsetWarning() {
+    this.warning = null;
+  }
+
   registerCapabilityListener() {}
 
   registerMultipleCapabilityListener(capabilities, listener) {

@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Najpierw włącz „Przełączanie faz przez Modbus” w ustawieniach urządzenia.",
     "batteryMerged": "Nieużywane: ten magazyn energii jest teraz częścią pierwszego urządzenia magazynu energii falownika. Usuń to urządzenie."
   },
+  "warnings": {
+    "remoteControlOverride": "Wymuszenie zdalnego sterowania włączone: według ustawień falownika zdalne sterowanie nie jest obsługiwane."
+  },
   "migrating": "Aktualizowanie funkcji…",
   "pair": {
     "manual": {

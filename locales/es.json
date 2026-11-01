@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Activa primero \"Conmutación de fases por Modbus\" en los ajustes del dispositivo.",
     "batteryMerged": "Ya no se usa: esta batería forma parte ahora del primer dispositivo de batería de su inversor. Elimina este dispositivo."
   },
+  "warnings": {
+    "remoteControlOverride": "Anulación del control remoto activa: según los ajustes del inversor, el control remoto no es compatible."
+  },
   "migrating": "Actualizando capacidades…",
   "pair": {
     "manual": {

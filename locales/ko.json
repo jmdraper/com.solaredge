@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "먼저 장치 설정에서 \"Modbus로 상 전환\"을 켜세요.",
     "batteryMerged": "더 이상 사용하지 않음: 이 배터리는 이제 인버터의 첫 번째 배터리 기기에 포함됩니다. 이 기기를 삭제하세요."
   },
+  "warnings": {
+    "remoteControlOverride": "원격 제어 무시 설정 켜짐: 인버터 설정상 원격 제어가 지원되지 않습니다."
+  },
   "migrating": "기능 업데이트 중…",
   "pair": {
     "manual": {

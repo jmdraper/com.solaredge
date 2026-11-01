@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Slå først \"Faseskift via Modbus\" til i enhedsindstillingerne.",
     "batteryMerged": "Bruges ikke længere: batteriet er nu en del af inverterens første batterienhed. Slet denne enhed."
   },
+  "warnings": {
+    "remoteControlOverride": "Tilsidesættelse af fjernstyring slået til: ifølge inverterens indstillinger understøttes fjernstyring ikke."
+  },
   "migrating": "Opdaterer funktioner…",
   "pair": {
     "manual": {

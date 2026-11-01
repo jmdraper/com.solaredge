@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Schalte zuerst „Phasenumschaltung über Modbus“ in den Geräteeinstellungen ein.",
     "batteryMerged": "Nicht mehr verwendet: Diese Batterie gehört jetzt zum ersten Batteriegerät ihres Wechselrichters. Bitte lösche dieses Gerät."
   },
+  "warnings": {
+    "remoteControlOverride": "Fernsteuerungs-Override an: Laut den Wechselrichtereinstellungen wird Fernsteuerung nicht unterstützt."
+  },
   "migrating": "Fähigkeiten werden aktualisiert…",
   "pair": {
     "manual": {

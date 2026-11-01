@@ -36,10 +36,16 @@ module.exports = class SolarEdgeBatteryModbusDevice extends ModbusDevice {
     await super.onInit();
   }
 
-  /** Such a device was never set up: a changed address must not start it. */
+  /**
+   * Such a device was never set up: a changed address must not start it. The remote control
+   * override turned off may answer with why a running mode stopped.
+   */
   async onSettings(event) {
-    if (this.base !== 0) return;
+    if (this.base !== 0) return undefined;
     await super.onSettings(event);
+    if (!event.changedKeys.includes('remoteControlOverride') || event.newSettings.remoteControlOverride) return undefined;
+    return this.definition.overrideOff({ client: this.client, device: this })
+      .then((message) => message ?? undefined, (error) => this.error('override off failed:', error.message));
   }
 
   async setControl(values) {

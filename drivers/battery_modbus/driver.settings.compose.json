@@ -101,6 +101,9 @@
       },
       {
         "$extends": "dischargeLimit"
+      },
+      {
+        "$extends": "remoteControlOverride"
       }
     ]
   }

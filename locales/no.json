@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Slå først på \"Faseveksling via Modbus\" i enhetsinnstillingene.",
     "batteryMerged": "Brukes ikke lenger: dette batteriet er nå en del av den første batterienheten til vekselretteren. Slett denne enheten."
   },
+  "warnings": {
+    "remoteControlOverride": "Overstyring av fjernstyring på: ifølge inverterens innstillinger støttes ikke fjernstyring."
+  },
   "migrating": "Oppdaterer funksjoner…",
   "pair": {
     "manual": {

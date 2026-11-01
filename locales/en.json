@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Turn on \"Phase switching via Modbus\" in the device settings first.",
     "batteryMerged": "No longer used: this battery is now part of the first battery device of its inverter. Please delete this device."
   },
+  "warnings": {
+    "remoteControlOverride": "Remote control override on: the inverter's settings say remote control is not supported."
+  },
   "migrating": "Updating capabilities…",
   "pair": {
     "manual": {

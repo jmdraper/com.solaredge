@@ -2676,6 +2676,41 @@
                 "ar": "حد التفريغ (Flow)",
                 "ko": "방전 한도 (Flow)"
               }
+            },
+            {
+              "id": "remoteControlOverride",
+              "type": "checkbox",
+              "value": false,
+              "label": {
+                "en": "Allow remote control despite inverter settings",
+                "nl": "Sturing op afstand toestaan ondanks omvormerinstellingen",
+                "de": "Fernsteuerung trotz Wechselrichtereinstellungen erlauben",
+                "fr": "Autoriser le pilotage à distance malgré les réglages de l'onduleur",
+                "es": "Permitir el control remoto pese a los ajustes del inversor",
+                "it": "Consenti il controllo remoto nonostante le impostazioni dell'inverter",
+                "da": "Tillad fjernstyring trods inverterens indstillinger",
+                "sv": "Tillåt fjärrstyrning trots växelriktarens inställningar",
+                "no": "Tillat fjernstyring tross inverterens innstillinger",
+                "pl": "Zezwól na zdalne sterowanie mimo ustawień falownika",
+                "ru": "Разрешить удалённое управление вопреки настройкам инвертора",
+                "ar": "السماح بالتحكم عن بعد رغم إعدادات العاكس",
+                "ko": "인버터 설정과 관계없이 원격 제어 허용"
+              },
+              "hint": {
+                "en": "Only if remote battery control demonstrably works on your inverter although advanced power control is off or export limitation is on (SolarEdge's documentation says both are needed). The app still never changes those settings.",
+                "nl": "Alleen als batterijsturing op afstand aantoonbaar werkt op je omvormer, hoewel advanced power control uit staat of terugleverbegrenzing aan (volgens de documentatie van SolarEdge is beide nodig). De app wijzigt die instellingen nog steeds nooit.",
+                "de": "Nur wenn die Fernsteuerung der Batterie an deinem Wechselrichter nachweislich funktioniert, obwohl Advanced Power Control aus oder die Einspeisebegrenzung an ist (laut SolarEdge-Dokumentation ist beides nötig). Die App ändert diese Einstellungen weiterhin nie.",
+                "fr": "Uniquement si le pilotage à distance de la batterie fonctionne de façon avérée sur votre onduleur alors que l'advanced power control est désactivé ou la limitation d'injection active (selon la documentation de SolarEdge, les deux sont nécessaires). L'application ne modifie toujours jamais ces réglages.",
+                "es": "Solo si el control remoto de la batería funciona de forma demostrada en tu inversor aunque advanced power control esté desactivado o la limitación de inyección activa (según la documentación de SolarEdge, ambas cosas son necesarias). La app sigue sin cambiar nunca esos ajustes.",
+                "it": "Solo se il controllo remoto della batteria funziona in modo dimostrato sul tuo inverter anche con l'advanced power control disattivato o la limitazione di immissione attiva (secondo la documentazione SolarEdge servono entrambe le cose). L'app non modifica comunque mai queste impostazioni.",
+                "da": "Kun hvis fjernstyring af batteriet beviseligt virker på din inverter, selvom advanced power control er slået fra eller leveringsbegrænsning er slået til (ifølge SolarEdges dokumentation kræves begge dele). Appen ændrer stadig aldrig disse indstillinger.",
+                "sv": "Endast om fjärrstyrning av batteriet bevisligen fungerar på din växelriktare trots att advanced power control är av eller inmatningsbegränsning är på (enligt SolarEdges dokumentation krävs båda). Appen ändrar fortfarande aldrig de inställningarna.",
+                "no": "Bare hvis fjernstyring av batteriet beviselig virker på inverteren din selv om advanced power control er av eller innmatingsbegrensning er på (ifølge SolarEdges dokumentasjon trengs begge deler). Appen endrer fortsatt aldri disse innstillingene.",
+                "pl": "Tylko jeśli sprawdzono, że zdalne sterowanie akumulatorem działa na twoim falowniku, mimo że advanced power control jest wyłączone lub ograniczenie oddawania włączone (według dokumentacji SolarEdge potrzebne jest jedno i drugie). Aplikacja nadal nigdy nie zmienia tych ustawień.",
+                "ru": "Только если удалённое управление батареей доказуемо работает на вашем инверторе, хотя advanced power control выключен или ограничение отдачи включено (по документации SolarEdge нужно и то и другое). Приложение по-прежнему никогда не меняет эти настройки.",
+                "ar": "فقط إذا ثبت أن التحكم عن بعد في البطارية يعمل على العاكس لديك رغم أن advanced power control متوقف أو تحديد التصدير مفعّل (تقول وثائق SolarEdge إن كليهما مطلوب). لا يغيّر التطبيق هذه الإعدادات أبدًا مع ذلك.",
+                "ko": "advanced power control이 꺼져 있거나 송전 제한이 켜져 있는데도 인버터에서 배터리 원격 제어가 실제로 작동하는 것이 확인된 경우에만 사용하세요(SolarEdge 문서에 따르면 둘 다 필요합니다). 앱은 여전히 이 설정을 절대 변경하지 않습니다."
+              }
             }
           ]
         }

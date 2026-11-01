@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Zet eerst \"Faseschakeling via Modbus\" aan in de apparaatinstellingen.",
     "batteryMerged": "Niet meer in gebruik: deze batterij zit nu in het eerste batterijapparaat van de omvormer. Verwijder dit apparaat."
   },
+  "warnings": {
+    "remoteControlOverride": "Override voor sturing op afstand aan: volgens de omvormerinstellingen wordt sturing op afstand niet ondersteund."
+  },
   "migrating": "Capabilities bijwerken…",
   "pair": {
     "manual": {

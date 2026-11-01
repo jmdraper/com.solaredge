@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Attiva prima \"Commutazione fasi via Modbus\" nelle impostazioni del dispositivo.",
     "batteryMerged": "Non più in uso: questa batteria fa ora parte del primo dispositivo batteria del suo inverter. Elimina questo dispositivo."
   },
+  "warnings": {
+    "remoteControlOverride": "Override del controllo remoto attivo: secondo le impostazioni dell'inverter il controllo remoto non è supportato."
+  },
   "migrating": "Aggiornamento delle funzionalità…",
   "pair": {
     "manual": {

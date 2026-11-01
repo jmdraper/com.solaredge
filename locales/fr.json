@@ -29,6 +29,9 @@
     "phaseSwitchingOff": "Activez d'abord « Commutation de phases via Modbus » dans les réglages de l'appareil.",
     "batteryMerged": "N'est plus utilisé : cette batterie fait maintenant partie du premier appareil batterie de son onduleur. Supprimez cet appareil."
   },
+  "warnings": {
+    "remoteControlOverride": "Forçage du pilotage à distance actif : selon les réglages de l'onduleur, le pilotage à distance n'est pas pris en charge."
+  },
   "migrating": "Mise à jour des capacités…",
   "pair": {
     "manual": {
